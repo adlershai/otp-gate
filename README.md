@@ -2,23 +2,23 @@
 
 Front door for **phpMyAdmin** at `https://pma.adler-backend.com/`. Separate repo from CRM, shop, and orders.
 
-This first cut is a **passthrough**: you still log in with Apache Basic (`pbphp`), then you see the SMS screen, then **Verify** sets a cookie with no CRM/Cellact check, then phpMyAdmin opens as today.
+Do not put Cellact keys here. CRM sends the SMS.
 
-Real SMS verification comes next. Do not put Cellact keys here.
-
-## Flow (passthrough)
+## Flow
 
 1. Browser opens `https://pma.adler-backend.com/`.
 2. Existing PMA HTTP Basic popup (`pbphp` / htpasswd inside the Docker container).
-3. After Basic succeeds, **otp-gate** shows the SMS code page instead of PMA.
-4. Click **Verify** (code is ignored). Cookie `otp_gate` is set.
-5. nginx/gate then proxies to phpMyAdmin on `127.0.0.1:8765`.
+3. After Basic succeeds, **otp-gate** asks CRM to SMS a code (`system=pma`) and shows the code page.
+4. Verify → CRM `adminSmsOtpVerify` → cookie `otp_gate`.
+5. Gate proxies to phpMyAdmin on `127.0.0.1:8765`.
+
+`OTP_PASSTHROUGH=1` skips CRM (screen-only). Production uses `0`.
 
 ## Local
 
 ```bash
 cp .env.example .env
-# set COOKIE_SECRET
+# set COOKIE_SECRET and ADMIN_OTP_TOKEN
 node --test
 node server.js
 ```

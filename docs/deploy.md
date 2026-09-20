@@ -18,7 +18,8 @@ cd /home/ubuntu
 git clone https://github.com/adlershai/otp-gate.git
 cd otp-gate
 cp .env.example .env
-# edit COOKIE_SECRET (16+ chars). Leave OTP_PASSTHROUGH=1 for now.
+# edit COOKIE_SECRET (16+ chars). Copy ADMIN_OTP_TOKEN from pretty-crm-api .env.
+# OTP_PASSTHROUGH=0 for real SMS.
 sudo cp ops/otp-gate.service /etc/systemd/system/otp-gate.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now otp-gate.service
