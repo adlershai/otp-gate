@@ -1,0 +1,14 @@
+{
+  "name": "otp-gate",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SMS OTP front door for phpMyAdmin (passthrough first)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

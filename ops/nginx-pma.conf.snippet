@@ -1,0 +1,21 @@
+# Replace only the pma.adler-backend.com location / proxy_pass target.
+# Backup /etc/nginx/nginx.conf first.
+
+server {
+    server_name pma.adler-backend.com;
+    listen 443 ssl;
+    ssl_certificate      /etc/letsencrypt/live/adler-backend.com/fullchain.pem;
+    ssl_certificate_key  /etc/letsencrypt/live/adler-backend.com/privkey.pem;
+    client_max_body_size 2M;
+    location / {
+        proxy_pass http://127.0.0.1:8777;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Authorization $http_authorization;
+        proxy_http_version 1.1;
+        proxy_buffering off;
+        proxy_cookie_path / "/; HttpOnly; Secure; SameSite=Lax";
+    }
+}

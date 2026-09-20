@@ -1,0 +1,15 @@
+[Unit]
+Description=PMA otp-gate
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/otp-gate
+EnvironmentFile=/home/ubuntu/otp-gate/.env
+ExecStart=/home/ubuntu/.nvm/versions/node/v20.19.5/bin/node /home/ubuntu/otp-gate/server.js
+Restart=on-failure
+User=ubuntu
+Group=ubuntu
+
+[Install]
+WantedBy=multi-user.target
