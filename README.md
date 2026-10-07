@@ -8,7 +8,7 @@ Do not put Cellact keys here. CRM sends the SMS.
 
 1. Browser opens `https://pma.adler-backend.com/`.
 2. Existing PMA HTTP Basic popup (`pbphp` / htpasswd inside the Docker container).
-3. After Basic succeeds, **otp-gate** asks CRM to SMS a code (`system=pma`) and shows the code page.
+3. After Basic succeeds, **otp-gate** asks CRM to SMS a code (`system=pma`) and shows the code page. “Send to email instead” calls the same API with `channel=email`.
 4. Verify → CRM `adminSmsOtpVerify` → cookie `otp_gate`.
 5. Gate proxies to phpMyAdmin on `127.0.0.1:8765`.
 

@@ -131,4 +131,33 @@ describe('real SMS verify', () => {
     gate.close()
     pma.close()
   })
+
+  it('asks CRM to send email OTP', async () => {
+    const calls = []
+    setCrmOtpDeps({
+      fetchFn: async (_url, opts) => {
+        calls.push(JSON.parse(opts.body))
+        return { status: 200, json: async () => ({ ok: true }) }
+      }
+    })
+    const { createServer } = require('../lib/app')
+    const pma = startPma((_req, res) => {
+      res.writeHead(200, { 'Content-Type': 'text/html' })
+      res.end('pma')
+    })
+    process.env.PMA_PORT = String(await listen(pma))
+    process.env.PMA_HOST = '127.0.0.1'
+    const gate = createServer()
+    const port = await listen(gate)
+    const res = await fetch(`http://127.0.0.1:${port}/email`, {
+      headers: { Authorization: 'Basic ' + Buffer.from('pbphp:x').toString('base64') }
+    })
+    assert.equal(res.status, 200)
+    assert.match(await res.text(), /Send to email instead/)
+    assert.equal(calls[0].type, 'adminSmsOtpSend')
+    assert.equal(calls[0].params.channel, 'email')
+    assert.equal(calls[0].params.username, 'pbphp')
+    gate.close()
+    pma.close()
+  })
 })
